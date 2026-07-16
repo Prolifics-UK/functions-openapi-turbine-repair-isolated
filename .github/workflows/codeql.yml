@@ -1,4 +1,4 @@
-name: "CodeQL Advanced"
+name: "CodeQL Deep Scan - C#"
 
 on:
   push:
@@ -10,8 +10,8 @@ on:
 
 jobs:
   analyze:
-    name: Analyze (${{ matrix.language }})
-    runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
+    name: Deep Analyze (C#)
+    runs-on: ubuntu-latest
 
     permissions:
       security-events: write
@@ -35,27 +35,26 @@ jobs:
         with:
           languages: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
-          queries: security-and-quality
+          queries: |
+            security-and-quality
+            codeql/csharp-queries:code-quality
+            codeql/csharp-queries:maintainability
+            codeql/csharp-queries:reliability
+            ./custom-queries
+          debug: true
 
       - name: Autobuild
         if: matrix.build-mode == 'autobuild'
         uses: github/codeql-action/autobuild@v4
 
-      - name: Run manual build steps
-        if: matrix.build-mode == 'manual'
-        shell: bash
-        run: |
-          echo "Replace this with your manual build commands"
-          exit 1
-
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
         with:
-          category: "/language:${{ matrix.language }}"
+          category: "/language:${{ matrix.language}}/deep-autobuild"
           output: ${{ github.workspace }}/codeql-results
 
       - name: Upload SARIF as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: codeql-sarif
+          name: codeql-sarif-${{ matrix.language }}
           path: ${{ github.workspace }}/codeql-results/**/*.sarif
