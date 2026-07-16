@@ -40,7 +40,6 @@ jobs:
             codeql/csharp-queries:code-quality
             codeql/csharp-queries:maintainability
             codeql/csharp-queries:reliability
-            ./custom-queries
           debug: true
 
       - name: Autobuild
