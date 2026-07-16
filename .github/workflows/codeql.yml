@@ -37,9 +37,6 @@ jobs:
           build-mode: ${{ matrix.build-mode }}
           queries: |
             security-and-quality
-            codeql/csharp-queries:code-quality
-            codeql/csharp-queries:maintainability
-            codeql/csharp-queries:reliability
           debug: true
 
       - name: Autobuild
