@@ -37,6 +37,7 @@ jobs:
           build-mode: ${{ matrix.build-mode }}
           queries: |
             security-and-quality
+            ./custom-queries
           debug: true
 
       - name: Autobuild
